@@ -100,7 +100,9 @@ app.get('/', async (c) => {
 		: ""
 	console.log('Final context message:', contextMessage)
 
-	const systemPrompt = `When answering the question or responding, use the context provided, if it is provided and relevant.`
+	const systemPrompt = `You're a helpful chatbot for MSRIT college. 
+	You will give insights about the MSRIT college. Don't answer questions that are not about MSRIT college.
+	When answering the question or responding, use the context provided, if it is provided and relevant.`
 
 	let modelUsed: string = ""
 	let response: AiTextGenerationOutput | Anthropic.Message
