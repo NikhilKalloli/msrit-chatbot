@@ -1,47 +1,106 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Notes | Cloudflare RAG Example</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-	<script src="https://unpkg.com/mustache@latest"></script>
-  	<script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
-	<script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes | MSRIT Assistant</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+  <script src="https://unpkg.com/mustache@latest"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-<body>
-  <h1>Notes</h1>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-indigo-600 text-white p-1.5 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+            <path d="M11.25 4.533A9.707 9.707 0 006 3.057c5.009 0 9.505 3.693 10.65 8.495a12.008 12.008 0 00-3.045 1.58c-.46.343-.89.717-1.28 1.117a9.716 9.716 0 00-1.075-9.716zM6 3.057c.916 0 1.816.104 2.69.299a9.72 9.72 0 00-5.66 7.776 9.707 9.707 0 003.463 11.613A12.008 12.008 0 006 23.943c5.009 0 9.505-3.693 10.65-8.495a12.008 12.008 0 00-3.045-1.58c-.46-.343-.89-.717-1.28-1.117A9.716 9.716 0 001.03 13.03a9.707 9.707 0 005.998-10.916.75.75 0 00-.49-.13V3.057z" />
+            <path d="M15.59 13.23a10.507 10.507 0 011.313-1.28A8.235 8.235 0 0120.225 10c1.409 0 2.644.732 3.356 1.846.368.578.127 1.36-.456 1.547-3.334 1.069-5.35 4.242-5.35 7.607 0 .482.04.955.118 1.415.102.613-.342 1.185-.964 1.185a8.23 8.23 0 01-1.336-.108 10.51 10.51 0 01-1.298-1.286 10.487 10.487 0 01-2.016-2.934 10.488 10.488 0 012.015-2.934zM9.375 16.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75zM9.375 19.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75z" />
+          </svg>
+        </div>
+        <span class="font-bold text-lg tracking-tight text-slate-800">MSRIT Chat Assistant</span>
+      </div>
+      <div class="flex gap-6 text-sm font-medium text-slate-600">
+        <a href="/ui" class="hover:text-indigo-600 transition-colors">Query</a>
+        <a href="/notes" class="text-indigo-600 border-b-2 border-indigo-600 pb-0.5">Notes</a>
+        <a href="/write" class="hover:text-indigo-600 transition-colors">Add Note</a>
+      </div>
+    </div>
+  </nav>
 
-	<p>
-    <small>
-			<a href="/ui">Query</a> ・ <a href="/notes">Notes</a> ・ <a href="/write">Add note</a>
-    </small>
-	</p>
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+    
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-slate-900">Knowledge Base</h1>
+      <a href="/write" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+          <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+        </svg>
+        Add Note
+      </a>
+    </div>
 
-	<div
-		hx-ext='client-side-templates'
-		hx-get="/notes.json"
-		hx-trigger="load"
-		hx-swap="innerHTML"
-		hx-target="#notes"
-		mustache-array-template="note"
-	>
-		<template id="note">
-			{{#data}}
-			  <div class="note">
-					<h2>Note #{{id}}</h2>
-			  	<p>{{text}}</p>
-					<form method="POST" action="/notes/{{id}}">
-						<input type="hidden" name="_method" value="DELETE">
-						<button type="submit">Delete</button>
-					</form>
-			  </div>
-			{{/data}}
-		</template>
+    <div
+      hx-ext='client-side-templates'
+      hx-get="/notes.json"
+      hx-trigger="load"
+      hx-swap="innerHTML"
+      hx-target="#notes"
+      mustache-array-template="note-template"
+    >
+      <template id="note-template">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {{#data}}
+            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow group relative">
+              <div class="flex justify-between items-start gap-4 mb-4">
+                <h2 class="text-sm font-mono text-slate-400 uppercase tracking-wider">ID: {{id}}</h2>
+                <form method="POST" action="/notes/{{id}}" class="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="text-slate-400 hover:text-red-600 p-1 transition-colors" title="Delete note">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                      <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+              <div class="prose prose-sm prose-indigo max-w-none text-slate-700">
+                <p class="whitespace-pre-wrap line-clamp-4">{{text}}</p>
+              </div>
+            </div>
+          {{/data}}
+          
+          {{^data}}
+            <div class="col-span-full text-center py-12 bg-white border border-slate-200 border-dashed rounded-xl">
+              <div class="text-slate-400 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mx-auto">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-medium text-slate-900">No notes yet</h3>
+              <p class="text-slate-500 mt-1">Add some knowledge to get started.</p>
+            </div>
+          {{/data}}
+        </div>
+      </template>
 
-		<div id="notes"></div>
-	</div>
+      <div id="notes" class="min-h-[200px] flex justify-center items-center">
+        <!-- Initial Loading State -->
+        <div class="flex flex-col items-center gap-3 text-slate-400">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <span class="text-sm animate-pulse">Loading knowledge base...</span>
+        </div>
+      </div>
+    </div>
+    
+  </main>
+  
+  <footer class="py-6 text-center text-slate-400 text-sm">
+    &copy; 2025 MSRIT Chat Assistant. Powered by Cloudflare Workers AI.
+  </footer>
+
 </body>
-
 </html>

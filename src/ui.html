@@ -1,28 +1,90 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chat | Cloudflare RAG Example</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-  <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSRIT Assistant</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .htmx-indicator { display: none; opacity: 0; transition: opacity 200ms ease-in; }
+    .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { display: flex; opacity: 1; }
+  </style>
 </head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-<body>
-  <h1>Retrieval Augmented Generation (RAG) </h1>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-indigo-600 text-white p-1.5 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+            <path d="M11.25 4.533A9.707 9.707 0 006 3.057c5.009 0 9.505 3.693 10.65 8.495a12.008 12.008 0 00-3.045 1.58c-.46.343-.89.717-1.28 1.117a9.716 9.716 0 00-1.075-9.716zM6 3.057c.916 0 1.816.104 2.69.299a9.72 9.72 0 00-5.66 7.776 9.707 9.707 0 003.463 11.613A12.008 12.008 0 006 23.943c5.009 0 9.505-3.693 10.65-8.495a12.008 12.008 0 00-3.045-1.58c-.46-.343-.89-.717-1.28-1.117A9.716 9.716 0 001.03 13.03a9.707 9.707 0 005.998-10.916.75.75 0 00-.49-.13V3.057z" />
+            <path d="M15.59 13.23a10.507 10.507 0 011.313-1.28A8.235 8.235 0 0120.225 10c1.409 0 2.644.732 3.356 1.846.368.578.127 1.36-.456 1.547-3.334 1.069-5.35 4.242-5.35 7.607 0 .482.04.955.118 1.415.102.613-.342 1.185-.964 1.185a8.23 8.23 0 01-1.336-.108 10.51 10.51 0 01-1.298-1.286 10.487 10.487 0 01-2.016-2.934 10.488 10.488 0 012.015-2.934zM9.375 16.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75zM9.375 19.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75z" />
+          </svg>
+        </div>
+        <span class="font-bold text-lg tracking-tight text-slate-800">MSRIT Chat Assistant</span>
+      </div>
+      <div class="flex gap-6 text-sm font-medium text-slate-600">
+        <a href="/ui" class="text-indigo-600 border-b-2 border-indigo-600 pb-0.5">Query</a>
+        <a href="/notes" class="hover:text-indigo-600 transition-colors">Notes</a>
+        <a href="/write" class="hover:text-indigo-600 transition-colors">Add Note</a>
+      </div>
+    </div>
+  </nav>
 
-	<p>
-    <small>
-			<a href="/ui">Query</a> ・ <a href="/notes">Notes</a> ・ <a href="/write">Add note</a>
-    </small>
-	</p>
+  <!-- Main Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+    
+    <!-- Chat Area -->
+    <div class="flex-1 flex flex-col gap-6 mb-8">
+      <div class="text-center py-10 space-y-4">
+        <h1 class="text-3xl font-bold text-slate-900">What can I help you with?</h1>
+        <p class="text-slate-500 text-lg">Ask me anything about MSRIT college.</p>
+      </div>
 
-  <form hx-get="/" hx-trigger="submit" hx-target="#result">
-    <textarea name="text" required="true" placeholder="Ask the AI anything"></textarea>
-    <button type="submit">Submit</button>
-  </form>
+      <!-- Result Container -->
+      <div id="result" class="empty:hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm prose prose-indigo max-w-none text-slate-700 whitespace-pre-wrap leading-relaxed">
+      </div>
+      
+      <!-- Loading Spinner -->
+      <div id="spinner" class="htmx-indicator flex justify-center items-center py-4">
+        <div class="flex flex-col items-center gap-3">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <span class="text-sm text-slate-500 animate-pulse">Generating response...</span>
+        </div>
+      </div>
 
-  <p id="result"></p>
+    </div>
+
+    <!-- Input Area -->
+    <div class="sticky bottom-6 bg-white/80 backdrop-blur-md border border-slate-200 shadow-lg rounded-2xl p-2">
+      <form hx-get="/" hx-trigger="submit" hx-target="#result" hx-indicator="#spinner" hx-swap="innerHTML" class="relative flex items-end gap-2">
+        <textarea 
+          name="text" 
+          required 
+          class="w-full bg-transparent border-0 focus:ring-0 resize-none p-3 max-h-32 text-slate-800 placeholder-slate-400"
+          placeholder="Type your question here..."
+          rows="1"
+          style="min-height: 44px;"
+          oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+        ></textarea>
+        <button 
+          type="submit" 
+          class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl p-2.5 mb-1 transition-colors shadow-sm flex-shrink-0"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+            <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+          </svg>
+        </button>
+      </form>
+    </div>
+    
+  </main>
+  
+  <footer class="py-6 text-center text-slate-400 text-sm">
+    &copy; 2025 MSRIT Chat Assistant. Powered by Cloudflare Workers AI.
+  </footer>
+
 </body>
-
 </html>

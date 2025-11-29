@@ -79,3 +79,9 @@ By default, this app uses Langchain's `RecursiveCharacterTextSplitter` to split 
 [vars]
 ENABLE_TEXT_SPLITTER = "false"
 ```
+
+
+1. Create a file called as wrangler.toml in the rootDir
+2. Paste the below content in it
+4. npm i
+3. Then run this command `npx wrangler dev --remote`

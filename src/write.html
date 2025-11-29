@@ -1,45 +1,125 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Write | Cloudflare RAG Example</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Note | MSRIT Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-<body>
-  <h1>Write a new note</h1>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-indigo-600 text-white p-1.5 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+            <path d="M11.25 4.533A9.707 9.707 0 006 3.057c5.009 0 9.505 3.693 10.65 8.495a12.008 12.008 0 00-3.045 1.58c-.46.343-.89.717-1.28 1.117a9.716 9.716 0 00-1.075-9.716zM6 3.057c.916 0 1.816.104 2.69.299a9.72 9.72 0 00-5.66 7.776 9.707 9.707 0 003.463 11.613A12.008 12.008 0 006 23.943c5.009 0 9.505-3.693 10.65-8.495a12.008 12.008 0 00-3.045-1.58c-.46-.343-.89-.717-1.28-1.117A9.716 9.716 0 001.03 13.03a9.707 9.707 0 005.998-10.916.75.75 0 00-.49-.13V3.057z" />
+            <path d="M15.59 13.23a10.507 10.507 0 011.313-1.28A8.235 8.235 0 0120.225 10c1.409 0 2.644.732 3.356 1.846.368.578.127 1.36-.456 1.547-3.334 1.069-5.35 4.242-5.35 7.607 0 .482.04.955.118 1.415.102.613-.342 1.185-.964 1.185a8.23 8.23 0 01-1.336-.108 10.51 10.51 0 01-1.298-1.286 10.487 10.487 0 01-2.016-2.934 10.488 10.488 0 012.015-2.934zM9.375 16.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75zM9.375 19.5a.75.75 0 00.75.75h3a.75.75 0 000-1.5h-3a.75.75 0 00-.75.75z" />
+          </svg>
+        </div>
+        <span class="font-bold text-lg tracking-tight text-slate-800">MSRIT Chat Assistant</span>
+      </div>
+      <div class="flex gap-6 text-sm font-medium text-slate-600">
+        <a href="/ui" class="hover:text-indigo-600 transition-colors">Query</a>
+        <a href="/notes" class="hover:text-indigo-600 transition-colors">Notes</a>
+        <a href="/write" class="text-indigo-600 border-b-2 border-indigo-600 pb-0.5">Add Note</a>
+      </div>
+    </div>
+  </nav>
 
-  <p>
-    <small>
-      <a href="/ui">Query</a> ・ <a href="/notes">Notes</a> ・ <a href="/write">Add note</a>
-    </small>
-  </p>
+  <!-- Main Content -->
+  <main class="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+    
+    <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900">Add to Knowledge Base</h1>
+        <p class="text-slate-500 mt-2">Help the AI learn more about MSRIT by adding new information.</p>
+      </div>
 
-  <form>
-    <textarea name="text" required="true" placeholder="Write a new note to add to the AI's knowledge base"></textarea>
-    <button type="submit">Submit</button>
-  </form>
+      <form class="space-y-6">
+        <div class="space-y-2">
+          <label for="text" class="block text-sm font-medium text-slate-700">Content</label>
+          <textarea 
+            id="text"
+            name="text" 
+            required 
+            class="w-full rounded-xl border-slate-200 bg-slate-50 p-4 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500 min-h-[200px] resize-y placeholder-slate-400"
+            placeholder="Enter detailed information about a specific topic, department, or facility at MSRIT..."
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-4 pt-2">
+          <a href="/notes" class="text-sm font-medium text-slate-600 hover:text-slate-900 px-4 py-2">Cancel</a>
+          <button 
+            type="submit" 
+            class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-6 py-2.5 font-medium transition-all shadow-sm hover:shadow flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <span>Add Note</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+  
+  <footer class="py-6 text-center text-slate-400 text-sm">
+    &copy; 2025 MSRIT Chat Assistant. Powered by Cloudflare Workers AI.
+  </footer>
 
   <script>
     const form = document.querySelector('form')
+    const submitBtn = form.querySelector('button[type="submit"]')
+    const originalBtnContent = submitBtn.innerHTML
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
+      
+      // Loading state
+      submitBtn.disabled = true
+      submitBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Adding...
+      `
+
       const text = form.querySelector('textarea').value
-      const response = await fetch('/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text })
-      })
-      if (response.ok) {
-        window.location.href = '/ui'
-      } else {
-        alert('Failed to create note')
+      try {
+        const response = await fetch('/notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text })
+        })
+        
+        if (response.ok) {
+          // Success state
+          submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700')
+          submitBtn.classList.add('bg-green-600', 'hover:bg-green-700')
+          submitBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-2">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            Added!
+          `
+          setTimeout(() => {
+            window.location.href = '/ui' // Redirect to query page to test immediately
+          }, 800)
+        } else {
+          throw new Error('Failed to create note')
+        }
+      } catch (error) {
+        alert('Failed to create note. Please try again.')
+        submitBtn.disabled = false
+        submitBtn.innerHTML = originalBtnContent
       }
     })
   </script>
 </body>
-
 </html>
