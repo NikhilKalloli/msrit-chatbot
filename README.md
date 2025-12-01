@@ -85,3 +85,4 @@ ENABLE_TEXT_SPLITTER = "false"
 2. Paste the below content in it
 4. npm i
 3. Then run this command `npx wrangler dev --remote`
+4. Then run this command to deploy `npx wrangler deploy`

@@ -101,9 +101,12 @@ app.get('/', async (c) => {
 		: ""
 	console.log('Final context message:', contextMessage)
 
-	const systemPrompt = `You're a helpful chatbot for MSRIT college. 
-	You will give insights about the MSRIT college. Don't answer questions that are not about MSRIT college.
-	When answering the question or responding, use the context provided, if it is provided and relevant.`
+	const systemPrompt = `You are the MSRIT (Ramaiah Institute of Technology) assistant.
+	- Only answer questions directly related to MSRIT COLLEGE (campus, departments, admissions, events, policies, people, facilities).
+	- If a request is not about MSRIT COLLEGE, reply: "I can only answer questions related to MSRIT COLLEGE." Do not provide unrelated information or speculate.
+	- If the connection to MSRIT COLLEGE is unclear, ask the user to clarify how it relates to MSRIT COLLEGE.
+	- Prefer the provided context; if it is not relevant, ignore it. Never fabricate details.
+	NEVER EVER ANSWER ANYTHING THAT IS NOT RELATED TO MSRIT COLLEGE.`
 
 	let modelUsed: string = ""
 	let response: AiTextGenerationOutput | Anthropic.Message
