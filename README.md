@@ -86,3 +86,13 @@ ENABLE_TEXT_SPLITTER = "false"
 4. npm i
 3. Then run this command `npx wrangler dev --remote`
 4. Then run this command to deploy `npx wrangler deploy`
+
+## Objectives of the Project:
+
+1. To build a generative AI agent that understands user intent and responds naturally to MSRIT-related queries.
+
+2. To create a unified conversational system that provides clear, accurate, and easy access to campus information.
+
+3. To ensure context-aware interaction so the agent can maintain conversation flow across multi-turn queries.
+
+4. To enable an easily updatable knowledge base so new institutional information can be added without major system changes.
